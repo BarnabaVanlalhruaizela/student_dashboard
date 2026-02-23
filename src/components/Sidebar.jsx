@@ -48,16 +48,7 @@ export default function Sidebar() {
         {/* submenu appears only if subject is active */}
         {isSubjectsActive && (
           <div className="sidebar__subMenu">
-            <NavLink
-  className={({ isActive }) =>
-    `sidebar__link ${
-      isActive || location.pathname.startsWith("/assignments")
-        ? "active"
-        : ""
-    }`
-  }
-  to="/subjects"
->
+            <NavLink className="sidebar__subLink" to="/assignments">
               <FaClipboardList /> <span>Assignment</span>
             </NavLink>
 
