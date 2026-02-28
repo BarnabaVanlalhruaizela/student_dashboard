@@ -14,38 +14,57 @@ export default function QuizDetail() {
   const [error, setError] = useState(null);
 
   // ==========================================
-  // FETCH QUIZ + START ATTEMPT
+  // START QUIZ + FETCH QUESTIONS
   // ==========================================
   useEffect(() => {
-    async function fetchQuiz() {
+    async function loadQuiz() {
       try {
         setLoading(true);
         setError(null);
 
-        // 1️⃣ Start quiz attempt
-        await api.post(`/quizzes/${quizId}/start/`);
+        // 🔹 Try starting quiz
+        try {
+          await api.post(`/quizzes/${quizId}/start/`);
+        } catch (startErr) {
+          // If already started, ignore
+          const msg = startErr.response?.data?.detail;
 
-        // 2️⃣ Fetch quiz data
+          if (
+            msg !== "Quiz already submitted." &&
+            msg !== "Quiz expired."
+          ) {
+            throw startErr;
+          }
+
+          if (msg === "Quiz already submitted.") {
+            navigate(`/subjects/quiz/result/${quizId}`);
+            return;
+          }
+
+          if (msg === "Quiz expired.") {
+            setError("Quiz expired.");
+            return;
+          }
+        }
+
+        // 🔹 Fetch quiz data
         const res = await api.get(`/quizzes/${quizId}/`);
         setQuizData(res.data);
 
       } catch (err) {
         console.error("Failed to load quiz:", err);
-
-        if (err.response?.data?.detail) {
-          setError(err.response.data.detail);
-        } else {
-          setError("Unable to load quiz.");
-        }
+        setError(
+          err.response?.data?.detail || "Unable to load quiz."
+        );
       } finally {
         setLoading(false);
       }
     }
 
     if (quizId) {
-      fetchQuiz();
+      loadQuiz();
     }
-  }, [quizId]);
+  }, [quizId, navigate]);
 
   // ==========================================
   // HANDLE ANSWER CHANGE
@@ -72,29 +91,25 @@ export default function QuizDetail() {
         })
       );
 
-      const res = await api.post(
-        `/quizzes/${quizId}/submit/`,
-        { answers: formattedAnswers }
-      );
+      await api.post(`/quizzes/${quizId}/submit/`, {
+        answers: formattedAnswers,
+      });
 
-      // Go to result endpoint properly
-      navigate(`/quizzes/${quizId}/result`);
+      // 🔹 Navigate to result page (match your router)
+      navigate(`/subjects/quiz/result/${quizId}`);
 
     } catch (err) {
       console.error("Submission failed:", err);
-
-      if (err.response?.data?.detail) {
-        setError(err.response.data.detail);
-      } else {
-        setError("Failed to submit quiz.");
-      }
+      setError(
+        err.response?.data?.detail || "Failed to submit quiz."
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   // ==========================================
-  // STATES
+  // UI STATES
   // ==========================================
   if (loading)
     return <div className="quizDetailPage">Loading quiz...</div>;
@@ -104,9 +119,10 @@ export default function QuizDetail() {
 
   if (!quizData) return null;
 
-  const allAnswered = quizData.questions.every(
-    (q) => answers[q.id] !== undefined
-  );
+  const allAnswered =
+    quizData.questions?.every(
+      (q) => answers[q.id] !== undefined
+    ) ?? false;
 
   // ==========================================
   // RENDER
@@ -138,7 +154,8 @@ export default function QuizDetail() {
               {quizData.teacher_name}
             </p>
             <p className="quizDetailInfoDue">
-              Due: {new Date(quizData.due_date).toLocaleString()}
+              Due:{" "}
+              {new Date(quizData.due_date).toLocaleString()}
             </p>
           </div>
 
