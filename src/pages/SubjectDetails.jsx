@@ -14,7 +14,7 @@ export default function SubjectDetails() {
     async function fetchSubjectDetails() {
       try {
         const res = await api.get(
-          `/courses/subjects/${subjectId}/`
+          `/courses/subjects/${subjectId}/dashboard/`
         );
         setSubjectDetails(res.data);
       } catch (err) {
