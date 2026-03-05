@@ -1,7 +1,4 @@
-/* =========================
-   LIVE SESSION - ZOOM STYLE
-   (Single clean file)
-========================= */
+/* LIVE SESSION - */
 
 :root{
   --panel: #ffffff;
@@ -24,9 +21,7 @@
   overflow: hidden;
 }
 
-/* NOTE:
-   Your studentLayout.css has overflow-y:auto here.
-   We override it ONLY when classroom exists (Zoom-like full screen). */
+
 .studentLayout__page:has(.classroom-layout){
   flex: 1;
   min-height: 0;
