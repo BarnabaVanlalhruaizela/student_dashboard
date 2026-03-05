@@ -13,12 +13,12 @@ export default function ChatPanel({ role }) {
 
       try {
         const msg = JSON.parse(text);
-        if (msg.type === "raise-hand") return;
+        if (msg.type === "raise-hand") return; // don't show in chat
       } catch {}
 
       setMessages((prev) => [
         ...prev,
-        { sender: participant.identity, text },
+        { sender: participant?.identity || "Unknown", text },
       ]);
     };
 
@@ -29,30 +29,37 @@ export default function ChatPanel({ role }) {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const encoder = new TextEncoder();
-    await localParticipant.publishData(
-      encoder.encode(input),
-      { reliable: true }
-    );
+    try {
+      const encoder = new TextEncoder();
+      await localParticipant.publishData(encoder.encode(input), {
+        reliable: true,
+      });
 
-    setMessages((prev) => [
-      ...prev,
-      { sender: "Me", text: input },
-    ]);
-
-    setInput("");
+      setMessages((prev) => [...prev, { sender: "Me", text: input }]);
+      setInput("");
+    } catch (e) {
+      console.error("❌ sendMessage failed", e);
+      alert("Message send failed (permission/token issue)");
+    }
   };
 
   const raiseHand = async () => {
     const message = {
       type: "raise-hand",
+      sender: localParticipant?.identity || "unknown",
     };
 
-    const encoder = new TextEncoder();
-    await localParticipant.publishData(
-      encoder.encode(JSON.stringify(message)),
-      { reliable: true }
-    );
+    try {
+      const encoder = new TextEncoder();
+      await localParticipant.publishData(
+        encoder.encode(JSON.stringify(message)),
+        { reliable: true }
+      );
+      console.log("raise-hand sent", message);
+    } catch (e) {
+      console.error(" raise-hand failed", e);
+      alert("Raise hand failed (permission/token issue)");
+    }
   };
 
   return (
@@ -68,7 +75,7 @@ export default function ChatPanel({ role }) {
 
       <div className="chat-input-area">
         {role === "student" && (
-          <button onClick={raiseHand} style={{ marginRight: "6px" }}>
+          <button className="raise-hand-btn" onClick={raiseHand} title="Raise hand">
             ✋
           </button>
         )}

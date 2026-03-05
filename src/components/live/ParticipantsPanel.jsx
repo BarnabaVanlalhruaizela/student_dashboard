@@ -14,19 +14,19 @@ export default function ParticipantsPanel() {
         const msg = JSON.parse(text);
 
         if (msg.type === "raise-hand") {
-          setRaisedHands((prev) => ({
-            ...prev,
-            [participant.identity]: true,
-          }));
+  const id = participant?.identity || msg.sender;
+  if (!id) return;
 
-          setTimeout(() => {
-            setRaisedHands((prev) => {
-              const updated = { ...prev };
-              delete updated[participant.identity];
-              return updated;
-            });
-          }, 15000);
-        }
+  setRaisedHands((prev) => ({ ...prev, [id]: true }));
+
+  setTimeout(() => {
+    setRaisedHands((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
+  }, 15000);
+}
       } catch {}
     };
 
