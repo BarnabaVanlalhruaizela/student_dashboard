@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCourse } from "../contexts/CourseContext";
+import { useState} from "react";
 import api from "../api/apiClient";
 import SubjectCard from "../components/SubjectCard";
 import PageHeader from "../components/PageHeader";
@@ -13,6 +14,10 @@ export default function Subjects() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredSubjects = subjects.filter((subject =>
+    subject.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ));
   useEffect(() => {
     if (courseLoading) return;
 
@@ -44,7 +49,7 @@ export default function Subjects() {
   return (
     <div className="subjectsPage">
       <div className="subjectsHeaderBox">
-        <PageHeader title="Subjects" />
+        <PageHeader title="Subjects" onSearch={setSearchTerm}/>
       </div>
 
       <div className="subjectsBodyBox">
@@ -52,9 +57,9 @@ export default function Subjects() {
           {subjects.length === 0 ? (
             <div>No subjects found.</div>
           ) : (
-            subjects.map((item) => (
+            filteredSubjects.map((subject) => (
               <SubjectCard
-                key={item.id}
+                key={subject.id}
                 img="https://images.unsplash.com/photo-1513258496099-48168024aec0?w=600"
                 subject={item.name}
                 teacher={
