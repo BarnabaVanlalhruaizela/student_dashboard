@@ -9,6 +9,7 @@ export default function RecordingsList() {
   const { id: subjectId } = useParams();
 
   const [recordingsData, setRecordingsData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const mockRecordingsData = [
@@ -31,18 +32,23 @@ export default function RecordingsList() {
       </button>
 
       <div className="recordingsHeaderBox">
-        <PageHeader title="Subject Name" />
+        <PageHeader title="Recordings" onSearch={setSearchTerm} />
       </div>
 
       <div className="recordingsBodyBox">
         <div className="recordingsGrid">
-          {recordingsData.map((item) => (
-            <RecordingCard
-              key={item.id}
-              {...item}
-              onClick={() => navigate(`/subjects/recordings/${subjectId}/video/${item.id}`)}
-            />
-          ))}
+          {recordingsData
+            .filter((item) =>
+              item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              item.sessionTitle.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((item) => (
+              <RecordingCard
+                key={item.id}
+                {...item}
+                onClick={() => navigate(`/subjects/recordings/${subjectId}/video/${item.id}`)}
+              />
+            ))}
         </div>
       </div>
     </div>

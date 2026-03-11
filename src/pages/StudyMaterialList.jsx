@@ -6,6 +6,7 @@ import "../styles/studyMaterial.css";
 export default function StudyMaterialList() {
   const navigate = useNavigate();
   const [chaptersData, setChaptersData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const mockChaptersData = [
@@ -36,7 +37,7 @@ export default function StudyMaterialList() {
       </button>
 
       <div className="studyMaterialHeaderBox">
-        <PageHeader title="Subject Name" />
+        <PageHeader title="Study Material" onSearch={setSearchTerm} />
       </div>
 
       <div className="studyMaterialBodyBox">
@@ -53,20 +54,24 @@ export default function StudyMaterialList() {
                 </tr>
               </thead>
               <tbody>
-                {chaptersData.map((chapter) => (
-                  <tr key={chapter.id}>
-                    <td>{chapter.name}</td>
-                    <td>{chapter.date}</td>
-                    <td className="studyMaterialActions">
-                      <button className="studyMaterialViewBtn" onClick={() => handleView(chapter)}>
-                        View
-                      </button>
-                      <button className="studyMaterialDownloadBtn" onClick={() => handleDownload(chapter)}>
-                        Download
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {chaptersData
+                  .filter((chapter) =>
+                    chapter.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((chapter) => (
+                    <tr key={chapter.id}>
+                      <td>{chapter.name}</td>
+                      <td>{chapter.date}</td>
+                      <td className="studyMaterialActions">
+                        <button className="studyMaterialViewBtn" onClick={() => handleView(chapter)}>
+                          View
+                        </button>
+                        <button className="studyMaterialDownloadBtn" onClick={() => handleDownload(chapter)}>
+                          Download
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -78,18 +83,22 @@ export default function StudyMaterialList() {
               <span>Uploaded On</span>
             </div>
 
-            {chaptersData.map((chapter) => (
-              <div key={chapter.id} className="studyMaterialCard">
-                <div className="studyMaterialCardTop">
-                  <p className="studyMaterialCardTitle">{chapter.name}</p>
-                  <p className="studyMaterialCardDate">{chapter.date}</p>
+            {chaptersData
+              .filter((chapter) =>
+                chapter.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((chapter) => (
+                <div key={chapter.id} className="studyMaterialCard">
+                  <div className="studyMaterialCardTop">
+                    <p className="studyMaterialCardTitle">{chapter.name}</p>
+                    <p className="studyMaterialCardDate">{chapter.date}</p>
+                  </div>
+                  <div className="studyMaterialCardActions">
+                    <button className="viewBtn" onClick={() => handleView(chapter)}>View</button>
+                    <button className="downloadBtn" onClick={() => handleDownload(chapter)}>Download</button>
+                  </div>
                 </div>
-                <div className="studyMaterialCardActions">
-                  <button className="viewBtn" onClick={() => handleView(chapter)}>View</button>
-                  <button className="downloadBtn" onClick={() => handleDownload(chapter)}>Download</button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
 
         </div>

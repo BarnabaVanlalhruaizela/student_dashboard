@@ -15,6 +15,7 @@ export default function QuizList() {
   const [completedQuizzes, setCompletedQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (tab) setActiveTab(tab);
@@ -79,7 +80,7 @@ export default function QuizList() {
         <div className="quizListHeaderRow">
           <h2 className="quizListTitle">Quizzes</h2>
           <div className="quizSearch">
-            <input placeholder="Search..." />
+            <input placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)} />
             <span className="quizSearchIcon">🔍</span>
           </div>
         </div>
@@ -102,20 +103,25 @@ export default function QuizList() {
 
       <div className="quizListBodyBox">
         <div className="quizGrid">
-          {quizzes.length === 0 ? (
-            <div>No quizzes found.</div>
-          ) : (
-            quizzes.map((quiz) => (
-              <QuizCard
-                key={quiz.id}
-                title={quiz.title}
-                teacher={quiz.teacher_name}
-                deadline={new Date(quiz.due_date).toLocaleString()}
-                isCompleted={activeTab === "completed"}
-                onClick={() => handleQuizClick(quiz)}
-              />
-            ))
-          )}
+          {(() => {
+            const filtered = quizzes.filter((quiz) =>
+              quiz.title.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            return filtered.length === 0 ? (
+              <div>{searchTerm ? "No matching quizzes." : "No quizzes found."}</div>
+            ) : (
+              filtered.map((quiz) => (
+                <QuizCard
+                  key={quiz.id}
+                  title={quiz.title}
+                  teacher={quiz.teacher_name}
+                  deadline={new Date(quiz.due_date).toLocaleString()}
+                  isCompleted={activeTab === "completed"}
+                  onClick={() => handleQuizClick(quiz)}
+                />
+              ))
+            );
+          })()}
         </div>
       </div>
     </div>
