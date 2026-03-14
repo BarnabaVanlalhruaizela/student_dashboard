@@ -7,12 +7,14 @@ import "../styles/recordings.css";
 
 export default function RecordingsList() {
   const navigate = useNavigate();
-  const { subjectId } = useParams(); // ✅ FIXED
+  const { subjectId } = useParams();
 
   const [recordingsData, setRecordingsData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    if (!subjectId) return;
+
     const fetchRecordings = async () => {
       try {
         const res = await api.get(`/courses/subjects/${subjectId}/recordings/`);
@@ -22,11 +24,11 @@ export default function RecordingsList() {
       }
     };
 
-    if (subjectId) fetchRecordings();
+    fetchRecordings();
   }, [subjectId]);
 
   const filteredRecordings = recordingsData.filter((item) =>
-    item.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    (item.title || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
