@@ -5,17 +5,20 @@ import "../styles/studyMaterial.css";
 import api from "../api/apiClient";
 
 export default function StudyMaterialList() {
+
   const navigate = useNavigate();
-  const { id: subjectId } = useParams();
+  const { subjectId } = useParams();
 
   const [chaptersData, setChaptersData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const BASE_URL = api.defaults.baseURL.replace("/api", "");
 
   useEffect(() => {
 
     if (!subjectId) return;
 
-    api.get(`/subjects/${subjectId}/materials/`)
+    api.get(`/materials/subjects/${subjectId}/materials/`)
       .then((res) => {
 
         const materials = res.data.map((item) => {
@@ -26,7 +29,7 @@ export default function StudyMaterialList() {
             name: item.title,
             date: new Date(item.created_at).toLocaleDateString(),
             fileUrl: firstFile
-              ? `https://api.shikshacom.com${firstFile.file}`
+              ? `${BASE_URL}${firstFile.file}`
               : null
           };
         });
@@ -60,7 +63,11 @@ export default function StudyMaterialList() {
 
   return (
     <div className="studyMaterialPage">
-      <button className="studyMaterialBack" onClick={() => navigate(-1)}>
+
+      <button
+        className="studyMaterialBack"
+        onClick={() => navigate(-1)}
+      >
         &lt; Back
       </button>
 
@@ -74,6 +81,7 @@ export default function StudyMaterialList() {
           {/* Desktop Table */}
           <div className="studyMaterialTableWrap">
             <table className="studyMaterialTable">
+
               <thead>
                 <tr>
                   <th>Name</th>
@@ -87,6 +95,7 @@ export default function StudyMaterialList() {
                   <tr key={chapter.id}>
                     <td>{chapter.name}</td>
                     <td>{chapter.date}</td>
+
                     <td className="studyMaterialActions">
 
                       <button
@@ -123,8 +132,12 @@ export default function StudyMaterialList() {
               <div key={chapter.id} className="studyMaterialCard">
 
                 <div className="studyMaterialCardTop">
-                  <p className="studyMaterialCardTitle">{chapter.name}</p>
-                  <p className="studyMaterialCardDate">{chapter.date}</p>
+                  <p className="studyMaterialCardTitle">
+                    {chapter.name}
+                  </p>
+                  <p className="studyMaterialCardDate">
+                    {chapter.date}
+                  </p>
                 </div>
 
                 <div className="studyMaterialCardActions">
@@ -152,6 +165,7 @@ export default function StudyMaterialList() {
 
         </div>
       </div>
+
     </div>
   );
 }
