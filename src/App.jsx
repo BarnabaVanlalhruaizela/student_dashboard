@@ -46,31 +46,39 @@ export default function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="change-password" element={<ChangePassword />} />
 
-              {/* Subjects list */}
+              {/* SUBJECTS */}
               <Route path="subjects" element={<Subjects />} />
 
-              {/* ===== ASSIGNMENTS ===== */}
-              {/* ===== ASSIGNMENTS ===== */}
-<Route
-  path="subjects/:subjectId/assignments"
-  element={<SubjectsAssignments />}
-/>
+              {/* SUBJECT DETAILS */}
+              <Route
+                path="subjects/:subjectId"
+                element={<SubjectDetails />}
+              />
 
-<Route
-  path="subjects/:subjectId/assignments/:assignmentId"
-  element={<AssignmentDetail />}
-/>
+              {/* ===== ASSIGNMENTS ===== */}
+              <Route
+                path="subjects/:subjectId/assignments"
+                element={<SubjectsAssignments />}
+              />
+
+              <Route
+                path="subjects/:subjectId/assignments/:assignmentId"
+                element={<AssignmentDetail />}
+              />
 
               {/* ===== QUIZ ===== */}
               <Route path="subjects/quiz" element={<SubjectsQuiz />} />
+
               <Route
                 path="subjects/quiz/:subjectId"
                 element={<QuizList />}
               />
+
               <Route
                 path="subjects/quiz/:subjectId/take/:quizId"
                 element={<QuizDetail />}
               />
+
               <Route
                 path="subjects/quiz/:subjectId/result/:quizId"
                 element={<QuizResult />}
@@ -81,30 +89,26 @@ export default function App() {
                 path="subjects/recordings"
                 element={<SubjectsRecordings />}
               />
-              <Route
-                path="subjects/recordings/:subjectId/video/:videoId"
-                element={<RecordingDetail />}
-              />
+
               <Route
                 path="subjects/recordings/:subjectId"
                 element={<RecordingsList />}
               />
 
-              {/* ===== STUDY MATERIAL ===== */}
-             <Route
-  path="study-material"
-  element={<SubjectsStudyMaterial />}
-/>
-
-<Route
-  path="study-material/:subjectId"
-  element={<StudyMaterialList />}
-/>
-
-              {/* ===== GENERIC SUBJECT ROUTE LAST ===== */}
               <Route
-                path="subjects/:subjectId"
-                element={<SubjectDetails />}
+                path="subjects/recordings/:subjectId/video/:videoId"
+                element={<RecordingDetail />}
+              />
+
+              {/* ===== STUDY MATERIAL ===== */}
+              <Route
+                path="study-material"
+                element={<SubjectsStudyMaterial />}
+              />
+
+              <Route
+                path="study-material/:subjectId"
+                element={<StudyMaterialList />}
               />
 
               {/* ===== LIVE SESSIONS ===== */}
@@ -113,7 +117,6 @@ export default function App() {
                 element={<LiveSessions />}
               />
 
-              {/* 🔥 THIS IS THE IMPORTANT FIX */}
               <Route
                 path="live/:id"
                 element={<LiveSessionDetail />}
