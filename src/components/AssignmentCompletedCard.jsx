@@ -5,7 +5,7 @@ export default function AssignmentCompletedCard({ id, title, teacher, completedD
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/assignments/${id}`);
+    navigate(`/subjects/${subjectId}/assignments/${id}`); ✅
   };
 
   return (
