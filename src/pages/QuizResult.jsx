@@ -9,18 +9,14 @@ export default function QuizResult() {
   const { subjectId, quizId } = useParams();
 
   const [resultData, setResultData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(null);
   const [openExplanation, setOpenExplanation] = useState({});
 
   const toggleExplanation = (id) => {
-    setOpenExplanation(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    setOpenExplanation(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // ✅ NEW: REATTEMPT FUNCTION
   const handleReattempt = async () => {
     try {
       await api.post(`/quizzes/${quizId}/start/`);
@@ -45,13 +41,17 @@ export default function QuizResult() {
         setLoading(false);
       }
     }
-
     fetchResult();
   }, [quizId]);
 
   if (loading) return <div className="quizResultPage">Loading result...</div>;
-  if (error) return <div className="quizResultPage">{error}</div>;
+  if (error)   return <div className="quizResultPage">{error}</div>;
   if (!resultData) return null;
+
+  const total     = resultData.questions.length;
+  const correct   = resultData.questions.filter(q => q.is_correct).length;
+  const incorrect = total - correct;
+  const pct       = Math.round((correct / total) * 100);
 
   return (
     <div className="quizResultPage">
@@ -59,11 +59,14 @@ export default function QuizResult() {
         &lt; Back
       </button>
 
+      {/* ── Header ── */}
       <div className="quizResultHeaderBox">
         <PageHeader title={resultData.subject_name} />
       </div>
 
       <div className="quizResultBodyBox">
+
+        {/* ── Quiz info ── */}
         <div className="quizDetailInfo quizDetailInfo--result">
           <div className="quizDetailInfoLeft">
             <h3 className="quizDetailInfoTitle">{resultData.title}</h3>
@@ -74,67 +77,87 @@ export default function QuizResult() {
           </div>
         </div>
 
-        <div className="quizDetailQuestions">
-          {resultData.questions.map((q, index) => (
-            <div key={q.id} className="quizDetailQuestion quizDetailQuestion--result">
-              <div className="quizDetailQuestionRow">
-                <p className="quizDetailQuestionText">
-                  {index + 1}. {q.text}
-                </p>
-                <p className="quizDetailQuestionAnswer">
-                  Ans: {q.correct_choice}
-                </p>
-              </div>
-
-              <div className="quizDetailOptions quizDetailOptions--disabled">
-                <div
-                  className={`quizDetailOption ${
-                    q.is_correct ? "quizDetailOption--selected" : ""
-                  }`}
-                >
-                  <span className="quizDetailOptionText">
-                    Your Answer: {q.selected_choice}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => toggleExplanation(q.id)}
-                style={{ marginTop: "8px" }}
-              >
-                {openExplanation[q.id] ? "Hide Explanation" : "Show Explanation"}
-              </button>
-
-              {openExplanation[q.id] && (
-                <div style={{ marginTop: "10px", padding: "8px", background: "#f5f5f5", borderRadius: "6px" }}>
-                  <strong>Explanation:</strong>
-                  <p>{q.explanation}</p>
-                </div>
-              )}
+        {/* ── Score summary cards ── */}
+        <div className="quizResultSummary">
+          {[
+            { label: "Score",     value: `${resultData.score} / ${resultData.total_marks}`, mod: "score" },
+            { label: "Correct",   value: correct,   mod: "correct" },
+            { label: "Incorrect", value: incorrect, mod: "incorrect" },
+            { label: "Accuracy",  value: `${pct}%`, mod: "accuracy" },
+          ].map(({ label, value, mod }) => (
+            <div key={label} className={`quizResultSummaryCard quizResultSummaryCard--${mod}`}>
+              <div className="quizResultSummaryValue">{value}</div>
+              <div className="quizResultSummaryLabel">{label}</div>
             </div>
           ))}
         </div>
 
-        {/* ✅ MODIFIED: SCORE + REATTEMPT BUTTON */}
-        <div className="quizDetailScore">
+        {/* ── Questions ── */}
+        <div className="quizDetailQuestions">
+          {resultData.questions.map((q, index) => (
+            <div
+              key={q.id}
+              className={`quizDetailQuestion quizDetailQuestion--result ${
+                q.is_correct ? "quizDetailQuestion--correct" : "quizDetailQuestion--wrong"
+              }`}
+            >
+              {/* Question row */}
+              <div className="quizDetailQuestionRow">
+                <p className="quizDetailQuestionText">
+                  <span className={`quizResultBadge ${q.is_correct ? "quizResultBadge--correct" : "quizResultBadge--wrong"}`}>
+                    {q.is_correct ? "✓" : "✗"}
+                  </span>
+                  {index + 1}. {q.text}
+                </p>
+                <span className="quizResultCorrectChip">
+                  Ans: {q.correct_choice}
+                </span>
+              </div>
+
+              {/* Your answer pill */}
+              <div className={`quizResultAnswerPill ${q.is_correct ? "quizResultAnswerPill--correct" : "quizResultAnswerPill--wrong"}`}>
+                {q.is_correct ? "✓" : "✗"} Your Answer: {q.selected_choice}
+              </div>
+
+              {/* Explanation toggle */}
+              <div>
+                <button
+                  onClick={() => toggleExplanation(q.id)}
+                  className={`quizResultExplainBtn ${openExplanation[q.id] ? "quizResultExplainBtn--open" : ""}`}
+                >
+                  {openExplanation[q.id] ? "Hide Explanation ▲" : "Show Explanation ▼"}
+                </button>
+
+                {openExplanation[q.id] && (
+                  <div className="quizResultExplainBox">
+                    <strong>Explanation:</strong>
+                    <p>{q.explanation}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Score + actions row ── */}
+        <div className="quizResultFooter">
           <p className="quizDetailScoreText">
             Score: {resultData.score} / {resultData.total_marks}
           </p>
-
-          <button
-            onClick={handleReattempt}
-            style={{
-              marginTop: "12px",
-              padding: "8px 14px",
-              background: "#007bff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer"
-            }}
-          >
-            Reattempt Quiz
-          </button>
+          <div className="quizResultFooterBtns">
+            <button
+              className="quizResultBackBtn"
+              onClick={() => navigate(`/subjects/quiz/${subjectId}`)}
+            >
+              ← Back to Quizzes
+            </button>
+            <button
+              className="quizResultReattemptBtn"
+              onClick={handleReattempt}
+            >
+              🔁 Reattempt Quiz
+            </button>
+          </div>
         </div>
 
       </div>
