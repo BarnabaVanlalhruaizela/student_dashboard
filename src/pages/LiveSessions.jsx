@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useCourse } from "../contexts/CourseContext";
 import api from "../api/apiClient";
@@ -8,6 +8,7 @@ import "../styles/liveSessions.css";
 export default function LiveSessions() {
   const navigate = useNavigate();
   const { activeCourse } = useCourse();
+  const { subjectId } = useParams(); // ✅ FIXED (moved inside component)
 
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export default function LiveSessions() {
 
       try {
         const res = await api.get(
-          `/livestream/student/sessions/?course_id=${activeCourse.id}`,
+          `/livestream/student/sessions/?subject_id=${subjectId}`, // ✅ FIXED
           { signal: controller.signal }
         );
 
@@ -50,7 +51,7 @@ export default function LiveSessions() {
     fetchSessions();
 
     return () => controller.abort();
-  }, [activeCourse]);
+  }, [activeCourse, subjectId]); // ✅ added subjectId dependency
 
   // ✅ Centralized IST formatter
   const formatIST = (dateString) => {
