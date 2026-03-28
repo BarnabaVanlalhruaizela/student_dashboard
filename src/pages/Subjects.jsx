@@ -72,7 +72,7 @@ export default function Subjects({ mode }) {
                 onClick={() =>
                   mode === "assignments"
                     ? navigate(`/subjects/${subject.id}/assignments`)
-                    : navigate(`/subjects/${subject.id}/live-sessions`)
+                    : navigate(`/subjects/${subject.id}`)
                 }
               />
             ))

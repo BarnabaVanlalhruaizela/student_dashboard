@@ -145,7 +145,7 @@ export default function App() {
 
               {/* LIVE SESSIONS */}
               <Route
-                path="subjects/:subjectId/live-sessions"
+                path="live-sessions"
                 element={<LiveSessions />}
               />
 

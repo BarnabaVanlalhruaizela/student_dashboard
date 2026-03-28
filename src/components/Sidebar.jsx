@@ -113,10 +113,10 @@ export default function Sidebar({ setMenuOpen }) {
           </div>
         )}
 
-        {/* Live sessions (FIXED) */}
+        {/* Live sessions */}
         <NavLink
           className="sidebar__link"
-          to="/subjects"
+          to="/live-sessions"
           onClick={() => setMenuOpen(false)}
         >
           <span className="sidebar__icon">
