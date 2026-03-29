@@ -58,7 +58,7 @@ export default function LiveSessions() {
   // ✅ FILTER LOGIC
   const filteredSessions = selectedSubject
   ? sessions.filter(
-      (s) => String(s.subject?.id) === String(selectedSubject)
+      (s) => String(s.subject_id) === String(selectedSubject)
     )
   : sessions;
 
