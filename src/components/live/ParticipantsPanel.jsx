@@ -43,12 +43,19 @@ export default function ParticipantsPanel() {
 
   return (
     <div className="participants-wrapper">
-      <div
-        className="participants-header"
-        onClick={() => setOpen(!open)}
-      >
-        <span>Participants ({participants.length})</span>
-        <span>{open ? "▾" : "▸"}</span>
+      <div className="participants-header" onClick={() => setOpen(!open)}>
+        <span>Participants</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span className="participants-count">{participants.length}</span>
+          <svg
+            className={`participants-chevron ${open ? "open" : ""}`}
+            width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" strokeWidth="2.5"
+            strokeLinecap="round" strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
       </div>
 
       {open && (
@@ -56,9 +63,7 @@ export default function ParticipantsPanel() {
           {participants.map((p) => (
             <div
               key={p.identity}
-              className={`participant-card ${
-                raisedHands[p.identity] ? "hand-raised" : ""
-              }`}
+              className={`participant-card ${raisedHands[p.identity] ? "hand-raised" : ""}`}
             >
               <div className="participant-avatar">
                 {p.identity.charAt(0).toUpperCase()}
