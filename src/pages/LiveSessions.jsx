@@ -57,10 +57,10 @@ export default function LiveSessions() {
 
   // ✅ FILTER LOGIC
   const filteredSessions = selectedSubject
-    ? sessions.filter(
-        (s) => String(s.subject_id) === String(selectedSubject)
-      )
-    : sessions;
+  ? sessions.filter(
+      (s) => String(s.subject?.id) === String(selectedSubject)
+    )
+  : sessions;
 
   // ✅ FORMATTERS
   const formatIST = (dateString) => {
