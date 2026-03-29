@@ -20,7 +20,7 @@ export default function RaiseHandButton() {
 
   return (
     <button
-      className="raise-hand-btn"
+      className={`raise-hand-btn ${raised ? "raised" : ""}`}
       onClick={toggleHand}
       title={raised ? "Lower hand" : "Raise hand"}
     >

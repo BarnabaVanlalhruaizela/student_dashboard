@@ -22,7 +22,11 @@ export default function ClassroomUI({ role }) {
   if (!teacherTrack) {
     return (
       <div className="waiting-screen">
-        <h2>Waiting for teacher to start…</h2>
+        <div className="waiting-card">
+          <div className="waiting-pulse" />
+          <h2>Waiting for teacher to start…</h2>
+          <p>You'll be connected as soon as the session begins</p>
+        </div>
       </div>
     );
   }
@@ -34,8 +38,17 @@ export default function ClassroomUI({ role }) {
         <button
           className="toggle-sidebar-btn"
           onClick={() => setSidebarOpen(!sidebarOpen)}
+          title={sidebarOpen ? "Hide panel" : "Show panel"}
         >
-          {sidebarOpen ? "Hide Panel" : "Show Panel"}
+          {sidebarOpen ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          )}
         </button>
 
         <VideoTrack trackRef={teacherTrack} />
@@ -50,7 +63,7 @@ export default function ClassroomUI({ role }) {
       )}
 
       {/* CONTROLS */}
-      <ControlBar />
+      <ControlBar role={role} />
 
       {/* STUDENT ONLY */}
       {role === "STUDENT" && <RaiseHandButton />}
