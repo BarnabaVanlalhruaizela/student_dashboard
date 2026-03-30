@@ -28,7 +28,10 @@ export default function AssignmentDetail() {
 
         setAssignment(data);
 
-        if (data.submission_status === "SUBMITTED") {
+        if (
+          data.submission_status === "SUBMITTED" ||
+          data.status === "SUBMITTED"
+        ) {
           setIsSubmitted(true);
           setSubmittedAt(
             data.submitted_at ? new Date(data.submitted_at) : null
@@ -81,10 +84,15 @@ export default function AssignmentDetail() {
 
   // ✅ FIX: open student submitted file
   const handleOpenFile = () => {
-    if (assignment?.submitted_file) {
-      window.open(assignment.submitted_file, "_blank");
-    }
-  };
+  const fileUrl =
+    assignment?.submitted_file ||
+    assignment?.file ||
+    assignment?.submission_file;
+
+  if (fileUrl) {
+    window.open(fileUrl, "_blank");
+  }
+};
 
   // ✅ FIX: open teacher attachment
   const handleOpenAttachment = () => {
