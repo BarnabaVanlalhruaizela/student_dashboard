@@ -15,7 +15,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import privateSession from "../api/privateSessionService";
+import * as privateSession from "../api/privateSessionService";
 import PrivateSessionCard from "../components/PrivateSessionCard";
 import PageHeader from "../components/PageHeader";
 import "../styles/privateSessions.css";
