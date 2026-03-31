@@ -53,10 +53,29 @@ export default function AssignmentDetail() {
   }, [assignmentId]);
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) setUploadedFile(file);
-  };
+  const file = e.target.files[0];
+  if (!file) return;
 
+  const allowedMimeTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ];
+
+  const allowedExtensions = [".pdf", ".doc", ".docx"];
+
+  const fileName = file.name.toLowerCase();
+
+  const isValidMime = allowedMimeTypes.includes(file.type);
+  const isValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+
+  if (!isValidMime && !isValidExtension) {
+    alert("Only PDF, DOC, and DOCX files are allowed.");
+    return;
+  }
+
+  setUploadedFile(file);
+};
   const handleSubmit = async () => {
     if (!uploadedFile) return;
 
@@ -138,13 +157,33 @@ export default function AssignmentDetail() {
               </p>
 
               {assignment.attachment && (
-                <div className="fileStrip" onClick={handleOpenAttachment}>
-                  <div className="fileStripIcon">📄</div>
-                  <div className="fileStripName">
-                    {assignment.attachment.split("/").pop()}
-                  </div>
-                </div>
-              )}
+  <div>
+    <div className="fileStrip">
+      <div className="fileStripIcon">📄</div>
+      <div className="fileStripName">
+        {assignment.attachment.split("/").pop()}
+      </div>
+    </div>
+
+    <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
+      <button
+        className="openFileBtn"
+        onClick={() => window.open(assignment.attachment, "_blank")}
+      >
+        View
+      </button>
+
+      <a
+        href={assignment.attachment}
+        download
+        className="openFileBtn"
+        style={{ textAlign: "center", display: "inline-block" }}
+      >
+        Download
+      </a>
+    </div>
+  </div>
+)}
             </div>
           )}
 
@@ -155,9 +194,24 @@ export default function AssignmentDetail() {
               </div>
 
               <label className="assignmentDetailUploadBtn">
-                <input type="file" hidden onChange={handleFileUpload} />
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  hidden
+                  onChange={handleFileUpload}
+                />
                 {uploadedFile ? uploadedFile.name : "[Upload File]"}
               </label>
+
+              {uploadedFile && (
+                <button
+                  className="openFileBtn"
+                  onClick={() => setUploadedFile(null)}
+                  style={{ marginBottom: "10px" }}
+                >
+                  Cancel File
+                </button>
+              )}
 
               <button
                 className="assignmentDetailSubmitBtn"
@@ -198,7 +252,7 @@ export default function AssignmentDetail() {
 
                 submittedOn: formatSmallDate(submittedAt),
 
-                submissionStatus: "On time",
+                submissionStatus: assignment.submission_status_label || "",
 
                 // ✅ FIXED FILE (NO FALLBACKS)
                 submittedFile: assignment.submitted_file
