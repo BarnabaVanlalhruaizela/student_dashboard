@@ -236,8 +236,9 @@
 }
 
 .calDate:hover {
-  background: #e0f2f1;
+  background: rgba(10, 128, 138, 0.08);
 }
+
 
 .calToday {
   background: #ff5b5b !important;
@@ -250,14 +251,23 @@
 }
 
 .calSelected {
-  background: #ef5350 !important;
-  color: white;
+  background: rgba(10, 128, 138, 0.15); /* soft teal circle */
+  color: #0a808a;
   font-weight: 700;
+  border: 2px solid #0a808a;
 }
+
 
 .calSelected:hover {
   background: #e53935 !important;
 }
+
+.calDate.calToday.calSelected {
+  background: #ff5b5b !important;
+  border: none;
+  color: white;
+}
+
 
 .calDate__dots {
   display: flex;
