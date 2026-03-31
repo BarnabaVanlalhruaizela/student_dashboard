@@ -27,6 +27,8 @@ export default function AssignmentDetail() {
         const res = await api.get(`/assignments/${assignmentId}/`);
         const data = res.data;
 
+        console.log("ASSIGNMENT DATA:", data);
+
         setAssignment(data);
 
         if (
