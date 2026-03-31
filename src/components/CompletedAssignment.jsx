@@ -13,8 +13,15 @@ const CompletedAssignment = ({ assignment }) => {
     teacherFile = { name: "", size: "—", url: "#" },
     submittedOn = "",
     submissionStatus = "On time",
-    submittedFile = { name: "Submitted File", size: "—", type: "Document", url: "#" },
+    submittedFile = { name: "Submitted File", size: "—", type: "", url: "#" }, // ✅ changed
   } = assignment || {};
+
+  // ✅ FIX: derive file type from name if not provided
+  const fileType =
+    submittedFile?.type ||
+    (submittedFile?.name?.includes(".")
+      ? submittedFile.name.split(".").pop().toUpperCase()
+      : "");
 
   return (
     <div className="ca-wrapper">
@@ -30,7 +37,7 @@ const CompletedAssignment = ({ assignment }) => {
       {/* Three Column Grid */}
       <div className="ca-grid">
 
-        {/* Column 1 — Assignment Overview */}
+        {/* Column 1 */}
         <div className="ca-col">
           {(subject || chapter) && (
             <div className="ca-subject-tag">
@@ -54,7 +61,7 @@ const CompletedAssignment = ({ assignment }) => {
           <p className="ca-desc-text">{description}</p>
         </div>
 
-        {/* Column 2 — Assignment Details */}
+        {/* Column 2 */}
         <div className="ca-col">
           <p className="ca-col-label" style={{ marginBottom: "12px" }}>Assignment details</p>
           <div className="ca-meta-grid">
@@ -103,7 +110,7 @@ const CompletedAssignment = ({ assignment }) => {
           )}
         </div>
 
-        {/* Column 3 — Your Submission */}
+        {/* Column 3 */}
         <div className="ca-col">
           <p className="ca-col-label" style={{ marginBottom: "12px" }}>Your submission</p>
 
@@ -130,12 +137,15 @@ const CompletedAssignment = ({ assignment }) => {
                 {submissionStatus}
               </span>
             </div>
-            {submittedFile?.type && (
+
+            {/* ✅ FIXED FILE TYPE */}
+            {fileType && (
               <div className="ca-sm-row">
                 <span className="ca-sm-key">File type</span>
-                <span className="ca-sm-val">{submittedFile.type}</span>
+                <span className="ca-sm-val">{fileType}</span>
               </div>
             )}
+
             {submittedFile?.size && submittedFile.size !== "—" && (
               <div className="ca-sm-row">
                 <span className="ca-sm-key">File size</span>
