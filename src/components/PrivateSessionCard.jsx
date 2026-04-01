@@ -1,3 +1,10 @@
+/**
+ * FILE: STUDENT_DASHBOARD/src/components/PrivateSessionCard.jsx
+ * No changes needed — this component already receives
+ * individual props (subject, teacher, date, time, status)
+ * which PrivateSessions.jsx now passes correctly.
+ */
+
 import "../styles/privateSessions.css";
 
 const STATUS_LABEL = {

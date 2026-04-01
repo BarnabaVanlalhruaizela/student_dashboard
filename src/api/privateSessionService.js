@@ -1,7 +1,9 @@
 /**
- * FILE: student_dashboard/src/api/privateSessionService.js
- * Matches the REAL backend: sessions_app with UUID IDs,
- * scheduled_date/scheduled_time fields, and /join/ endpoint.
+ * FILE: STUDENT_DASHBOARD/src/api/privateSessionService.js
+ *
+ * Connects to:
+ *   - sessions_app  → /api/sessions/...
+ *   - accounts      → /api/accounts/teachers/, /api/accounts/student/.../validate/
  */
 
 import api from "./apiClient";
@@ -11,68 +13,126 @@ const privateSession = {
   // ── Sessions by tab ──
   async getSessions(tab) {
     const res = await api.get("/sessions/student/", { params: { tab } });
-    return res.data;
+    return res.data.map(transformSession);
   },
 
   // ── Detail ──
   async getSessionDetail(id) {
     const res = await api.get(`/sessions/${id}/`);
-    return res.data;
+    return transformSession(res.data);
   },
 
   // ── Request a session ──
-  // Backend expects: teacher_id, subject, scheduled_date, scheduled_time,
-  // duration_minutes, session_type, group_strength, notes, student_ids
-  async requestSession(payload) {
+  // Accepts frontend field names → maps to backend field names
+  async requestSession(formData) {
+    const payload = {
+      teacher_id: formData.teacherId,
+      subject: formData.subject,
+      scheduled_date: formData.scheduledDate,
+      scheduled_time: formData.scheduledTime,
+      duration_minutes: formData.durationMinutes,
+      session_type: formData.studentIds && formData.studentIds.length > 0 ? "group" : "one_on_one",
+      group_strength: (formData.studentIds?.length || 0) + 1, // +1 for requester
+      notes: formData.note || "",
+      student_ids: formData.studentIds || [],
+    };
     const res = await api.post("/sessions/request/", payload);
-    return res.data;
+    return transformSession(res.data);
   },
 
   // ── Cancel ──
   async cancelSession(sessionId, reason = "") {
     const res = await api.post(`/sessions/${sessionId}/cancel/`, { reason });
-    return res.data;
+    return transformSession(res.data);
   },
 
   // ── Reschedule responses ──
   async confirmReschedule(sessionId) {
     const res = await api.post(`/sessions/${sessionId}/confirm-reschedule/`);
-    return res.data;
+    return transformSession(res.data);
   },
 
   async declineReschedule(sessionId) {
     const res = await api.post(`/sessions/${sessionId}/decline-reschedule/`);
-    return res.data;
+    return transformSession(res.data);
   },
 
-  // ── Leave / end session ──
-  async leaveSession(sessionId) {
-    const res = await api.post(`/sessions/${sessionId}/end/`);
-    return res.data;
-  },
-
-  // ── LiveKit — uses /join/ endpoint ──
-  async getLiveKitToken(sessionId) {
+  // ── LiveKit — join ongoing session ──
+  async joinSession(sessionId) {
     const res = await api.post(`/sessions/${sessionId}/join/`);
-    return res.data;
+    return res.data; // { livekit_url, token, room, role }
   },
 
   // ── Teachers list (for request form) ──
   async getTeachers(subject) {
-    const res = await api.get("/auth/teachers/", { params: { subject } });
+    const params = subject ? { subject } : {};
+    const res = await api.get("/accounts/teachers/", { params });
     return res.data;
   },
 
   // ── Validate student ID (for group form) ──
   async validateStudentId(studentId) {
-    const res = await api.get(`/auth/student/${studentId}/validate/`);
-    return res.data;
+    const res = await api.get(`/accounts/student/${studentId}/validate/`);
+    return res.data; // { valid, name, user_id, student_id }
   },
 
   // ── Constants ──
   SUBJECTS: ["Mathematics", "Science", "Physics", "Chemistry", "English", "History", "Biology"],
-  TIME_SLOTS: ["3:00 p.m - 5:00 p.m", "5:00 p.m - 7:00 p.m", "7:00 p.m - 9:00 p.m"],
-  DURATIONS: ["30 minutes", "60 minutes", "90 minutes"],
+  TIME_SLOTS: [
+    { label: "3:00 PM - 5:00 PM", value: "15:00" },
+    { label: "5:00 PM - 7:00 PM", value: "17:00" },
+    { label: "7:00 PM - 9:00 PM", value: "19:00" },
+  ],
+  DURATIONS: [
+    { label: "30 minutes", value: 30 },
+    { label: "60 minutes", value: 60 },
+    { label: "90 minutes", value: 90 },
+  ],
 };
+
+/**
+ * Transform backend response → frontend-friendly shape.
+ * Backend returns: teacher_name, scheduled_date, scheduled_time, etc.
+ * Frontend expects: teacher, date, time, etc.
+ */
+function transformSession(s) {
+  return {
+    id: s.id,
+    subject: s.subject,
+    topic: s.subject, // backend doesn't have a separate topic field
+    teacher: s.teacher_name,
+    teacherId: s.teacher_id,
+    requestedBy: s.student_name,
+    requestedById: s.requested_by_id,
+    studentId: s.student_id,
+    date: s.scheduled_date,
+    time: s.scheduled_time,
+    duration: s.duration_minutes ? `${s.duration_minutes} mins` : "",
+    durationMinutes: s.duration_minutes,
+    status: s.status,
+    sessionType: s.session_type,
+    groupStrength: s.group_strength,
+    note: s.notes,
+    notes: s.notes,
+    roomName: s.room_name,
+    // Reschedule fields
+    rescheduledDate: s.rescheduled_date,
+    rescheduledTime: s.rescheduled_time,
+    rescheduleReason: s.reschedule_reason,
+    teacherNote: s.reschedule_reason,
+    originalDate: s.rescheduled_date ? s.scheduled_date : null,
+    originalTime: s.rescheduled_time ? s.scheduled_time : null,
+    // Participants (for group sessions)
+    participants: s.participants || [],
+    students: (s.participants || []).map((p) => p.name),
+    // Timestamps
+    createdAt: s.created_at,
+    updatedAt: s.updated_at,
+    startedAt: s.started_at,
+    endedAt: s.ended_at,
+    declineReason: s.decline_reason,
+    cancelReason: s.cancel_reason,
+  };
+}
 
 export default privateSession;

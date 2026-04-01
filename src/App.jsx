@@ -30,6 +30,7 @@ import StudyMaterialList from "./pages/StudyMaterialList";
 import LiveSessionDetail from "./pages/LiveSessionDetail";
 import LiveSessions from "./pages/LiveSessions";
 import PrivateSessions from "./pages/PrivateSessions";
+import PrivateSessionLive from "./pages/PrivateSessionLive";
 
 import Quiz from "./pages/Quiz";
 
@@ -152,6 +153,9 @@ export default function App() {
               {/* Global Quiz */}
               <Route path="quiz" element={<Quiz />} />
             </Route>
+
+            {/* PRIVATE SESSION LIVE — outside StudentLayout (fullscreen room) */}
+            <Route path="/private-session/live/:id" element={<PrivateSessionLive />} />
           </Routes>
         </BrowserRouter>
       </CourseProvider>
