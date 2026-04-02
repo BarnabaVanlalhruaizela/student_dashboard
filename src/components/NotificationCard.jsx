@@ -1,20 +1,34 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/listCard.css";
 
+const TYPE_LABELS = {
+  ASSIGNMENT: "Assignment",
+  SESSION: "Live Session",
+  QUIZ: "Quiz",
+};
+
+const TYPE_CLASSES = {
+  ASSIGNMENT: "assignments",
+  SESSION: "livesessions",
+  QUIZ: "quiz",
+};
+
+const TYPE_ROUTES = {
+  ASSIGNMENT: "/assignments",
+  SESSION: "/live-sessions",
+  QUIZ: "/subjects/quiz",
+};
+
 export default function NotificationCard({ title, subject, teacher, time, time2, day, type }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    if (type === "Assignments") navigate("/assignments");
-    else if (type === "Live Sessions") navigate("/live-sessions");
-    else if (type === "Quiz") navigate("/subjects/quiz");
+    const route = TYPE_ROUTES[type];
+    if (route) navigate(route);
   };
 
-  const typeClass =
-    type === "Live Sessions" ? "livesessions"
-    : type === "Assignments" ? "assignments"
-    : type === "Quiz" ? "quiz"
-    : "";
+  const typeClass = TYPE_CLASSES[type] || "";
+  const displayLabel = TYPE_LABELS[type] || type;
 
   return (
     <div

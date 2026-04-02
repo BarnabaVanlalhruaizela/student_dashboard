@@ -299,6 +299,31 @@
   display: none;
 }
 
+/* ===== CALENDAR LEGEND ===== */
+.calLegend {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.calLegend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #5a5a5a;
+}
+
+.calLegend__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 /* ===== SCHEDULE LIST ===== */
 
 .scheduleList {
@@ -338,13 +363,15 @@
   border-radius: 10px 0 0 10px;
 }
 
-.scheduleItem--livesessions { background: #FFFDE7; }
-.scheduleItem--assignments  { background: #F1F8E9; }
-.scheduleItem--quiz         { background: #F3E5F5; }
+.scheduleItem--livesessions    { background: #FFFDE7; }
+.scheduleItem--assignments     { background: #F1F8E9; }
+.scheduleItem--quiz            { background: #F3E5F5; }
+.scheduleItem--privatesession  { background: #FBE9E7; }
 
-.scheduleItem--livesessions::before { background: #FDD835; }
-.scheduleItem--assignments::before  { background: #4CAF50; }
-.scheduleItem--quiz::before         { background: #9C27B0; }
+.scheduleItem--livesessions::before    { background: #FDD835; }
+.scheduleItem--assignments::before     { background: #4CAF50; }
+.scheduleItem--quiz::before            { background: #9C27B0; }
+.scheduleItem--privatesession::before  { background: #FF8A65; }
 
 .scheduleItem__header {
   display: flex;
@@ -362,9 +389,10 @@
   white-space: nowrap;
 }
 
-.scheduleBadge--livesessions { background: #0a808a; }
-.scheduleBadge--assignments  { background: #4CAF50; }
-.scheduleBadge--quiz         { background: #9C27B0; }
+.scheduleBadge--livesessions    { background: #0a808a; }
+.scheduleBadge--assignments     { background: #4CAF50; }
+.scheduleBadge--quiz            { background: #9C27B0; }
+.scheduleBadge--privatesession  { background: #FF8A65; }
 
 
 .scheduleDayBadge {
