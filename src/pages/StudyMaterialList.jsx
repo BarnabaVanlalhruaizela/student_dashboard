@@ -42,9 +42,8 @@ export default function StudyMaterialList() {
   }, [subjectId]);
 
   const handleView = (chapter) => {
-    if (!chapter.fileUrl) return;
-    window.open(chapter.fileUrl, "_blank");
-  };
+    navigate(`/study-material/${chapter.id}`);
+  };;
 
   const handleDownload = (chapter) => {
     if (!chapter.fileUrl) return;

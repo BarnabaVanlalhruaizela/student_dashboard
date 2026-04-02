@@ -26,6 +26,7 @@ import RecordingDetail from "./pages/RecordingDetail";
 
 import SubjectsStudyMaterial from "./pages/SubjectsStudyMaterial";
 import StudyMaterialList from "./pages/StudyMaterialList";
+import StudyMaterialDetail from "./pages/StudyMaterialDetail";
 
 import LiveSessionDetail from "./pages/LiveSessionDetail";
 import LiveSessions from "./pages/LiveSessions";
@@ -81,6 +82,8 @@ export default function App() {
                 path="subjects/:subjectId/assignments"
                 element={<SubjectsAssignments />}
               />
+              {/*StudyMAterialDetail */}
+              <Route path="/study-material/:id" element={<StudyMaterialDetail />} />
 
               {/* ASSIGNMENT DETAIL */}
               <Route
