@@ -472,3 +472,213 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Loading state ── */
+.ad-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 24px;
+  color: #6b7280;
+  font-size: 13px;
+}
+.ad-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #0a808a;
+  border-radius: 50%;
+  animation: ad-spin 0.7s linear infinite;
+}
+.ad-error {
+  padding: 40px 24px;
+  color: #ef4444;
+  font-size: 13px;
+}
+@keyframes ad-spin { to { transform: rotate(360deg); } }
+
+/* ── Due urgency badge ── */
+.ad-urgency-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.due-overdue { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+.due-today   { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.due-soon    { background: rgba(245,158,11,0.08); color: #d97706; border: 1px solid rgba(245,158,11,0.2); }
+
+/* ── File strip hint ── */
+.fileStrip__hint {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── Drag & drop zone ── */
+.ad-drop-zone {
+  border: 2px dashed #cfd4d8;
+  border-radius: 10px;
+  background: #f0f0f0;
+  margin-bottom: 10px;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.ad-drop-zone.drag-over {
+  border-color: #0a808a;
+  background: #e0f4f5;
+}
+.ad-drop-zone.has-file {
+  border-color: #0B7E58;
+  background: #edfaf4;
+  border-style: solid;
+}
+.ad-drop-label {
+  display: block;
+  cursor: pointer;
+  padding: 14px 12px;
+}
+.ad-drop-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.ad-drop-icon {
+  font-size: 20px;
+  color: #9ca3af;
+}
+.ad-drop-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #444;
+}
+.ad-drop-hint {
+  font-size: 10px;
+  color: #9ca3af;
+}
+.ad-file-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.ad-file-icon { font-size: 18px; }
+.ad-file-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0B7E58;
+  word-break: break-all;
+  text-align: center;
+}
+.ad-file-size {
+  font-size: 10px;
+  color: #6b7280;
+}
+
+/* ── Cancel file btn ── */
+.ad-cancel-btn {
+  width: 100%;
+  background: none;
+  border: 1px solid #e5e7eb;
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-family: inherit;
+  transition: background 0.2s, border-color 0.2s;
+}
+.ad-cancel-btn:hover {
+  background: rgba(239,68,68,0.06);
+  border-color: #ef4444;
+}
+
+/* ── Submit button spinner + success ── */
+.ad-btn-spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: ad-spin 0.7s linear infinite;
+}
+.assignmentDetailSubmitBtn.submit-success {
+  background: #0B7E58;
+  pointer-events: none;
+}
+
+/* ── Confirm modal ── */
+.ad-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: ad-fade-in 0.15s ease;
+}
+.ad-modal {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  width: 300px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: ad-slide-up 0.2s ease;
+}
+.ad-modal-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 8px;
+}
+.ad-modal-sub {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.ad-modal-sub strong {
+  color: #374151;
+}
+.ad-modal-actions {
+  display: flex;
+  gap: 8px;
+}
+.ad-modal-cancel {
+  flex: 1;
+  background: #f3f4f6;
+  border: none;
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.ad-modal-cancel:hover { background: #e5e7eb; }
+.ad-modal-confirm {
+  flex: 1;
+  background: #0B7E58;
+  border: none;
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.ad-modal-confirm:hover { background: #096b4b; }
+
+@keyframes ad-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ad-slide-up { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
