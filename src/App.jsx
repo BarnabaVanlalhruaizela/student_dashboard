@@ -1,6 +1,6 @@
-import { useEffect } from "react"; // NEW
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext"; // UPDATED
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CourseProvider } from "./contexts/CourseContext";
 
 import StudentLayout from "./layout/StudentLayout";
@@ -35,7 +35,6 @@ import PrivateSessionLive from "./pages/PrivateSessionLive";
 
 import Quiz from "./pages/Quiz";
 
-// NEW: auth guard for app domain
 function RequireStudentAuth({ children }) {
   return children;
 }
@@ -46,7 +45,6 @@ export default function App() {
       <CourseProvider>
         <BrowserRouter>
           <Routes>
-            {/* UPDATED: StudentLayout ko auth guard ke andar wrap kiya */}
             <Route
               path="/"
               element={
@@ -55,43 +53,39 @@ export default function App() {
                 </RequireStudentAuth>
               }
             >
-              {/* Dashboard */}
               <Route index element={<Dashboard />} />
 
-              {/* Profile */}
               <Route path="profile" element={<Profile />} />
               <Route path="change-password" element={<ChangePassword />} />
 
-              {/* SUBJECTS */}
               <Route path="subjects" element={<Subjects />} />
 
-              {/* SUBJECT DETAILS */}
               <Route
                 path="subjects/:subjectId"
                 element={<SubjectDetails />}
               />
 
-              {/* ASSIGNMENTS → FIRST SHOW SUBJECT LIST */}
-          <Route
-  path="assignments"
-  element={<Subjects mode="assignments" />}
-/>
+              <Route
+                path="assignments"
+                element={<Subjects mode="assignments" />}
+              />
 
-              {/* ASSIGNMENTS OF A SUBJECT */}
               <Route
                 path="subjects/:subjectId/assignments"
                 element={<SubjectsAssignments />}
               />
-              {/*StudyMAterialDetail */}
-              <Route path="/study-material/:id" element={<StudyMaterialDetail />} />
 
-              {/* ASSIGNMENT DETAIL */}
+              {/* ✅ DETAIL PAGE */}
+              <Route
+                path="study-material/view/:id"
+                element={<StudyMaterialDetail />}
+              />
+
               <Route
                 path="subjects/:subjectId/assignments/:assignmentId"
                 element={<AssignmentDetail />}
               />
 
-              {/* QUIZ */}
               <Route path="subjects/quiz" element={<SubjectsQuiz />} />
 
               <Route
@@ -109,7 +103,6 @@ export default function App() {
                 element={<QuizResult />}
               />
 
-              {/* RECORDINGS */}
               <Route
                 path="subjects/recordings"
                 element={<SubjectsRecordings />}
@@ -125,18 +118,17 @@ export default function App() {
                 element={<RecordingDetail />}
               />
 
-              {/* STUDY MATERIAL */}
               <Route
                 path="study-material"
                 element={<SubjectsStudyMaterial />}
               />
 
+              {/* ✅ FIXED LIST ROUTE */}
               <Route
-                path="study-material/:subjectId"
+                path="study-material/list/:subjectId"
                 element={<StudyMaterialList />}
               />
 
-              {/* LIVE SESSIONS */}
               <Route
                 path="live-sessions"
                 element={<LiveSessions />}
@@ -147,18 +139,18 @@ export default function App() {
                 element={<LiveSessionDetail />}
               />
 
-              {/* PRIVATE SESSIONS */}
               <Route
                 path="private-sessions"
                 element={<PrivateSessions />}
               />
 
-              {/* Global Quiz */}
               <Route path="quiz" element={<Quiz />} />
             </Route>
 
-            {/* PRIVATE SESSION LIVE — outside StudentLayout (fullscreen room) */}
-            <Route path="/private-session/live/:id" element={<PrivateSessionLive />} />
+            <Route
+              path="/private-session/live/:id"
+              element={<PrivateSessionLive />}
+            />
           </Routes>
         </BrowserRouter>
       </CourseProvider>

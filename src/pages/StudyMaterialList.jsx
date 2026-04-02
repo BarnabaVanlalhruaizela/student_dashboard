@@ -27,7 +27,7 @@ export default function StudyMaterialList() {
             name: item.title,
             date: new Date(item.created_at).toLocaleDateString(),
 
-            // ✅ FIX: correct field from backend
+            // ✅ correct field from backend
             fileUrl: firstFile?.file_url || null
           };
         });
@@ -42,13 +42,12 @@ export default function StudyMaterialList() {
   }, [subjectId]);
 
   const handleView = (chapter) => {
-    navigate(`/study-material/${chapter.id}`);
-  };;
+    navigate(`/study-material/view/${chapter.id}`);
+  };
 
   const handleDownload = (chapter) => {
     if (!chapter.fileUrl) return;
 
-    // ✅ FIX: reliable download for external URLs
     window.open(chapter.fileUrl, "_blank");
   };
 

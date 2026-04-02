@@ -11,7 +11,7 @@ export default function StudyMaterialDetail() {
   const [material, setMaterial] = useState(null);
 
   useEffect(() => {
-    api.get(`/materials/${id}/`)
+    api.get(`/materials/materials/${id}/`)
       .then((res) => setMaterial(res.data))
       .catch((err) => console.error(err));
   }, [id]);
@@ -26,7 +26,7 @@ export default function StudyMaterialDetail() {
       </button>
 
       <div className="smd-header">
-        <h2>Mathematics</h2>
+        <h2>{material.subject_name || "Subject"}</h2>
       </div>
 
       <div className="smd-wrapper">
@@ -37,7 +37,7 @@ export default function StudyMaterialDetail() {
           <h3 className="smd-topic">{material.title}</h3>
 
           <p className="smd-chapter">
-            Chapter 1: Foundations
+            {material.chapter_name || "Chapter"}
           </p>
 
           <div className="smd-note">
@@ -53,17 +53,17 @@ export default function StudyMaterialDetail() {
         <div className="smd-files-panel">
 
           <div className="smd-files-header">
-            Files - {material.files.length}
+            Files - {material.files?.length || 0}
           </div>
 
           {/* FLOATING COUNT BADGE */}
           <div className="smd-file-count">
-            {material.files.length}
+            {material.files?.length || 0}
           </div>
 
           <div className="smd-files-list">
 
-            {material.files.map((file) => (
+            {material.files?.map((file) => (
               <div key={file.id} className="smd-file-card">
 
                 <div className="smd-file-info">
