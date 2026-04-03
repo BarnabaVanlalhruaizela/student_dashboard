@@ -75,7 +75,9 @@ export default function StudyMaterialDetail() {
 
                   <div className="smd-file-text">
                     <p className="smd-file-name">{file.file_name}</p>
-                    <span className="smd-file-size">—</span>
+                    <span className="smd-file-size">
+                      {file.file_size || "—"}
+                    </span>
                   </div>
                 </div>
 
